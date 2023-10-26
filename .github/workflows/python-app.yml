@@ -48,8 +48,8 @@ jobs:
       if: steps.filter.outputs.data == 'true'
       run: |
         echo "Updating hash file..."
-        git --global user.name "github-actions[bot]"
-        git --global user.email "actions[bot]@users.noreply.github.com"
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "actions[bot]@users.noreply.github.com"
         git add data/password_hash.txt
         git commit -m "GitHub Action AutoUpdate"
         git push
