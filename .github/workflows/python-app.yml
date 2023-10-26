@@ -18,25 +18,13 @@ jobs:
     outputs:
       output1: ${{ steps.filter.outputs.password_correct }}
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - uses: dorny/paths-filter@v2
       id: filter
       with:
         filters: |
           workflows:
             - 'password_correct.txt'
-    # run only if 'password_correct.txt' file was changed
-    - name: check change in password 
-      if: steps.filter.outputs.password_correct == 'true'
-      run: python generate_hash.py |
-           echo "Correct Password Changed"
-      
-  build:
-
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v3
     - name: Set up Python 3.10
       uses: actions/setup-python@v3
       with:
@@ -52,6 +40,12 @@ jobs:
         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+    # run only if 'password_correct.txt' file was changed
+    - name: check change in password 
+      if: steps.filter.outputs.password_correct == 'true'
+      run: |
+           python generate_hash.py
+           echo "Correct Password Changed"
     - name: Test with python
       run: |
         python login.py
