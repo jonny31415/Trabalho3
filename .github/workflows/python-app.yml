@@ -43,7 +43,7 @@ jobs:
       if: steps.filter.outputs.data == 'true'
       run: |
            python generate_hash.py
-           echo "Correct Password Changed"
+           echo "Some Password File Changed"
     - name: Test with python
       run: |
         python login.py
