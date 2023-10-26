@@ -39,11 +39,11 @@ jobs:
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     # run if any file from 'data/' was changed
-    - name: check change in data folder
+    - name: Check changes in data folder
       if: steps.filter.outputs.data == 'true'
       run: |
            python generate_hash.py
            echo "Some Password File Changed"
-    - name: Test with python
+    - name: Test with pytest
       run: |
-        python login.py
+        pytest tests.py
