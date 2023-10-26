@@ -8,7 +8,7 @@ on:
     branches: [ "main" ]
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   build:
@@ -44,6 +44,7 @@ jobs:
       run: |
         python generate_hash.py
         echo "Some Password File Changed"
+    # Update hash file and push
     - name: Change data/password_hash.txt
       if: steps.filter.outputs.data == 'true'
       run: |
