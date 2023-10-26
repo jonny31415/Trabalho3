@@ -14,7 +14,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     outputs:
-      output1: ${{ steps.filter.outputs.password_correct }}
+      output1: ${{ steps.filter.outputs.data }}
     steps:
     - uses: actions/checkout@v3
     - uses: dorny/paths-filter@v2
@@ -39,8 +39,8 @@ jobs:
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     # run if any file from 'data/' was changed
-    - name: check change in password 
-      if: steps.filter.outputs.password_correct == 'true'
+    - name: check change in data folder
+      if: steps.filter.outputs.data == 'true'
       run: |
            python generate_hash.py
            echo "Correct Password Changed"
