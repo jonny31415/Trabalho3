@@ -13,7 +13,7 @@ permissions:
   contents: read
 
 jobs:
-  paths-filter:
+  build:
     runs-on: ubuntu-latest
     outputs:
       output1: ${{ steps.filter.outputs.password_correct }}
