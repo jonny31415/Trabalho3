@@ -1,10 +1,12 @@
 import hashlib
 
+
 # Read content from file
 def read_file(path: str) -> str:
     with open(path, "r") as f:
         content = f.readline()
     return content
+
 
 # Write content to file
 def write_file(path: str, content: str) -> None:
@@ -14,4 +16,4 @@ def write_file(path: str, content: str) -> None:
 
 # SHA256 encrypt password
 def sha256_encrypt(password: str) -> str:
-    return hashlib.sha256(password.encode()).hexdigest() 
+    return hashlib.sha256(password.encode()).hexdigest()

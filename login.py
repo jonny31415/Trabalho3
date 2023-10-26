@@ -8,7 +8,7 @@ sys.path.insert(0, DIR_PATH)
 
 # To test different passwords just create a .txt file and change PASSWORD_PATH
 PASSWORD_PATH = DIR_PATH+"/data/password_wrong.txt"
-PASSWORD_HASH_PATH = DIR_PATH+"/data/password_hash.txt" 
+PASSWORD_HASH_PATH = DIR_PATH+"/data/password_hash.txt"
 
 
 # Check if user password hash is the same as the hash file
@@ -21,6 +21,7 @@ def login():
     password_hash = sha256_encrypt(password)
 
     return password_hash == true_hash
+
 
 def main() -> None:
     login_status = login()
