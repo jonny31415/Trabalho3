@@ -6,8 +6,6 @@ name: Python application
 on:
   push:
     branches: [ "main" ]
-  # pull_request:
-  #   branches: [ "main" ]
 
 permissions:
   contents: read
@@ -23,8 +21,8 @@ jobs:
       id: filter
       with:
         filters: |
-          workflows:
-            - 'password_correct.txt'
+          data:
+            - 'data/**'
     - name: Set up Python 3.10
       uses: actions/setup-python@v3
       with:
@@ -40,7 +38,7 @@ jobs:
         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
-    # run only if 'password_correct.txt' file was changed
+    # run if any file from 'data/' was changed
     - name: check change in password 
       if: steps.filter.outputs.password_correct == 'true'
       run: |
