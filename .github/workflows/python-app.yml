@@ -14,7 +14,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     outputs:
-      output1: ${{ steps.filters.outputs.data }}
+      output1: ${{ steps.filter.outputs.data }}
     steps:
     - uses: actions/checkout@v3
     - uses: dorny/paths-filter@v2
@@ -28,6 +28,9 @@ jobs:
       uses: actions/setup-python@v3
       with:
         python-version: "3.10"
+    - name: Test 
+      run: |
+        echo "Filter Output ${{ steps.filter.outputs.data }}"
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
@@ -39,15 +42,15 @@ jobs:
         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
-    # Run if any file from 'data/' was changed
+    # Run if password_hash.txt or password_correct.txt were changed
     - name: Check change in data folder
-      if: steps.filters.outputs.data == 'true'
+      if: steps.filter.outputs.data == 'true'
       run: |
         python generate_hash.py
         echo "Some Password File Changed"
     # Update hash file and push
     - name: Change data/password_hash.txt
-      if: steps.filters.outputs.data == 'true'
+      if: steps.filter.outputs.data == 'true'
       run: |
         echo "Updating hash file..."
         git config --global user.name "github-actions[bot]"
