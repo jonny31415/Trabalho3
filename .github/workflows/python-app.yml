@@ -28,12 +28,14 @@ jobs:
       uses: actions/setup-python@v3
       with:
         python-version: "3.10"
+    - name: Test 
+      run: |
+        echo "Filter Output ${steps.filters.outputs.data}"
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install flake8 pytest
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-        echo "${{ steps.filters.outputs.data }}"
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names
