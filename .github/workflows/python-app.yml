@@ -24,8 +24,7 @@ jobs:
           data:
             - 'data/password_correct.txt'
             - 'data/password_hash.txt'
-        base: |
-          'pytest'
+        base: pytest
     - name: Set up Python 3.10
       uses: actions/setup-python@v3
       with:
