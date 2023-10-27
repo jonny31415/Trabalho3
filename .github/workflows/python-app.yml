@@ -13,16 +13,27 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
-    outputs:
-      output1: ${{ steps.filter.outputs.data }}
+    # outputs:
+    #   output1: ${{ steps.verify-changed-files.outputs.changed_files }}
     steps:
     - uses: actions/checkout@v3
-    - uses: dorny/paths-filter@v2
-      id: filter
+    # - uses: dorny/paths-filter@v2
+    #   id: filter
+    #   with:
+    #     filters: |
+    #       data:
+    #         - 'data/**'
+    - name: Verify Changed files
+      uses: tj-actions/verify-changed-files@v16
+      id: verify-changed-files
       with:
-        filters: |
-          data:
-            - 'data/**'
+        files: |
+           data/password_correct.txt
+
+    - name: Run step only when any of the above files change.
+      if: steps.verify-changed-files.outputs.files_changed == 'true'
+      run: |
+        echo "Changed files: ${{ steps.verify-changed-files.outputs.changed_files }}"
     - name: Set up Python 3.10
       uses: actions/setup-python@v3
       with:
