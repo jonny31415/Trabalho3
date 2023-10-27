@@ -41,13 +41,13 @@ jobs:
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     # Run if any file from 'data/' was changed
     - name: Check change in data folder
-      if: steps.verify-changed-files.outputs.changed_files == 'true'
+      if: steps.filters.outputs.data == 'true'
       run: |
         python generate_hash.py
         echo "Some Password File Changed"
     # Update hash file and push
     - name: Change data/password_hash.txt
-      if: steps.verify-changed-files.outputs.changed_files == 'true'
+      if: steps.filters.outputs.data == 'true'
       run: |
         echo "Updating hash file..."
         git config --global user.name "github-actions[bot]"
