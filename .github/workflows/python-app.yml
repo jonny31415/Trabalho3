@@ -14,30 +14,16 @@ jobs:
   build:
     runs-on: ubuntu-latest
     outputs:
-      all: ${{ steps.changes.outputs.all }}
-      ts: ${{ steps.changes.outputs.ts }}
-    # outputs:
-    #   output1: ${{ steps.verify-changed-files.outputs.changed_files }}
+      output1: ${{ steps.filters.outputs.data }}
     steps:
     - uses: actions/checkout@v3
-    # - uses: dorny/paths-filter@v2
-    #   id: filter
-    #   with:
-    #     filters: |
-    #       data:
-    #         - 'data/**'
-    - name: Get changed files
-      id: changes
-      # Set outputs using the command.
-      run: |
-        echo "::set-output name=all::$(git diff --name-only --diff-filter=ACMRT ${{ github.event.pull_request.base.sha }} ${{ github.sha }} | xargs)"
-        echo "::set-output name=ts::$(git diff --name-only --diff-filter=ACMRT ${{ github.event.pull_request.base.sha }} ${{ github.sha }} | grep .ts$ | xargs)"
-        echo "${{ steps.changes.outputs.all}}"
-        echo "${{ steps.changes.outputs.ts}}"
-    - name: Run step only when any of the above files change.
-      if: steps.changes.outputs.all == 'true'
-      run: |
-        echo "Changed files: ${{ steps.changes.outputs.all }}"
+    - uses: dorny/paths-filter@v2
+      id: filter
+      with:
+        filters: |
+          data:
+            - 'data/password_correct.txt'
+            - 'data/password_hash.txt'
     - name: Set up Python 3.10
       uses: actions/setup-python@v3
       with:
@@ -53,22 +39,22 @@ jobs:
         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
-    # # Run if any file from 'data/' was changed
-    # - name: Check change in data folder
-    #   if: steps.verify-changed-files.outputs.changed_files == 'true'
-    #   run: |
-    #     python generate_hash.py
-    #     echo "Some Password File Changed"
-    # # Update hash file and push
-    # - name: Change data/password_hash.txt
-    #   if: steps.verify-changed-files.outputs.changed_files == 'true'
-    #   run: |
-    #     echo "Updating hash file..."
-    #     git config --global user.name "github-actions[bot]"
-    #     git config --global user.email "actions[bot]@users.noreply.github.com"
-    #     git add data/password_hash.txt
-    #     git commit -m "GitHub Action AutoUpdate"
-    #     git push
+    # Run if any file from 'data/' was changed
+    - name: Check change in data folder
+      if: steps.verify-changed-files.outputs.changed_files == 'true'
+      run: |
+        python generate_hash.py
+        echo "Some Password File Changed"
+    # Update hash file and push
+    - name: Change data/password_hash.txt
+      if: steps.verify-changed-files.outputs.changed_files == 'true'
+      run: |
+        echo "Updating hash file..."
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "actions[bot]@users.noreply.github.com"
+        git add data/password_hash.txt
+        git commit -m "GitHub Action AutoUpdate"
+        git push
     - name: Test with python
       run: |
         python login.py
